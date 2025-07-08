@@ -1,0 +1,20 @@
+<div id="table-container">
+
+  <table>
+    <tbody>
+      <%= if assigns[:error_message] do %>
+        <tr>
+          <td colspan="6"><%= @error_message %></td>
+        </tr>
+      <% else %>
+        <%= for meerkat <- @meerkats do %>
+          <tr data-test-id={meerkat.id}>
+            <td><%= meerkat.id %></td>
+            <td><%= meerkat.name %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>
