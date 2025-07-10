@@ -3,11 +3,13 @@ defmodule MeowWeb.MeerkatLive do
 
   alias Meow.Meerkats
   alias MeowWeb.Forms.SortingForm
-  alias MeowWeb.Forms.FilterForm
   alias MeowWeb.Forms.PaginationForm
+  alias MeowWeb.Forms.FilterForm
 
+  @impl true
   def mount(_params, _session, socket), do: {:ok, socket}
 
+  @impl true
   def handle_params(params, _url, socket) do
     socket =
       socket
@@ -17,13 +19,14 @@ defmodule MeowWeb.MeerkatLive do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_info({:update, opts}, socket) do
     params = merge_and_sanitize_params(socket, opts)
     path = Routes.live_path(socket, __MODULE__, params)
     {:noreply, push_patch(socket, to: path, replace: true)}
   end
 
-  def parse_params(socket, params) do
+  defp parse_params(socket, params) do
     with {:ok, sorting_opts} <- SortingForm.parse(params),
          {:ok, filter_opts} <- FilterForm.parse(params),
          {:ok, pagination_opts} <- PaginationForm.parse(params) do
@@ -38,11 +41,6 @@ defmodule MeowWeb.MeerkatLive do
         |> assign_filter()
         |> assign_pagination()
     end
-  end
-
-  defp assign_sorting(socket, overrides \\ %{}) do
-    opts = Map.merge(SortingForm.default_values(), overrides)
-    assign(socket, :sorting, opts)
   end
 
   defp assign_meerkats(socket) do
@@ -70,10 +68,20 @@ defmodule MeowWeb.MeerkatLive do
     |> Map.new()
   end
 
+  defp assign_sorting(socket, overrides \\ %{}) do
+    assign(socket, :sorting, SortingForm.default_values(overrides))
+  end
+
+  defp assign_pagination(socket, overrides \\ %{}) do
+    assign(socket, :pagination, PaginationForm.default_values(overrides))
+  end
+
+  defp assign_filter(socket, overrides \\ %{}) do
+    assign(socket, :filter, FilterForm.default_values(overrides))
+  end
+
   defp assign_total_count(socket, total_count) do
-    update(socket, :pagination, fn pagination ->
-      %{pagination | total_cunt: total_count}
-    end)
+    update(socket, :pagination, fn pagination -> %{pagination | total_count: total_count} end)
   end
 
   defp maybe_reset_pagination(overrides) do
@@ -82,13 +90,5 @@ defmodule MeowWeb.MeerkatLive do
     else
       overrides
     end
-  end
-
-  defp assign_filter(socket, overrides \\ %{}) do
-    assign(socket, :filter, FilterForm.default_values(overrides))
-  end
-
-  def assign_pagination(socket, overrides \\ %{}) do
-    assign(socket, :pagination, PaginationForm.default_values(overrides))
   end
 end
