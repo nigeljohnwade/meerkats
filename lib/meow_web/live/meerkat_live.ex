@@ -3,6 +3,7 @@ defmodule MeowWeb.MeerkatLive do
 
   alias Meow.Meerkats
   alias MeowWeb.Forms.SortingForm
+  alias MeowWeb.Forms.FilterForm
 
   def mount(_params, _session, socket), do: {:ok, socket}
 
@@ -21,11 +22,16 @@ defmodule MeowWeb.MeerkatLive do
   end
 
   def parse_params(socket, params) do
-    with {:ok, sorting_opts} <- SortingForm.parse(params) do
-      assign_sorting(socket, sorting_opts)
+    with {:ok, sorting_opts} <- SortingForm.parse(params),
+         {:ok, filter_opts} <- FilterForm.parse(params) do
+      socket
+      |> assign_sorting(sorting_opts)
+      |> assign_filter(filter_opts)
     else
       _error ->
-        assign_sorting(socket)
+        socket
+        |> assign_sorting()
+        |> assign_filter()
     end
   end
 
@@ -37,5 +43,9 @@ defmodule MeowWeb.MeerkatLive do
   defp assign_meerkats(socket) do
     %{sorting: sorting} = socket.assigns
     assign(socket, :meerkats, Meerkats.list_meerkats(sorting))
+  end
+
+  defp assign_filter(socket, overrides \\ %{}) do
+    assign(socket, :filter, FilterForm.default_values(overrides))
   end
 end

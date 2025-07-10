@@ -6,7 +6,7 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.form let={f} for={@changeset} as="filter" phx-submit="search" phx-target={@myself}>
+      <.form :let={f} for={@changeset} as={:filter} phx-submit="search" phx-target={@myself}>
         <div>
           <div>
             <%= label f, :id %>
@@ -15,7 +15,7 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
             </div>
             <div>
             <%= label f, :name %>
-            <%= number_input f, :name %>
+            <%= text_input f, :name %>
             <%= error_tag f, :name %>
           </div>
           <%= submit "Search" %>
@@ -25,12 +25,12 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
     """
   end
 
-  def update(%{filter: filter}, socket) do
-    {:ok, assign(socket, :changeset, FilterForm.change_values(filter))}
+  def update(assigns, socket) do
+    {:ok, assign_changeset(assigns, socket)}
   end
 
   def handle_event("search", %{"filter" => filter}, socket) do
-    case FilterForn.parse(filter) do
+    case FilterForm.parse(filter) do
       {:ok, opts} ->
         send(self(), {:update, opts})
         {:noreply, socket}
@@ -38,5 +38,9 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
       {:error, changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
+  end
+
+  defp assign_changeset(%{filter: filter}, socket) do
+    assign(socket, :changeset, FilterForm.change_values(filter))
   end
 end

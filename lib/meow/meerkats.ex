@@ -8,15 +8,15 @@ defmodule Meow.Meerkats do
 
   alias Meow.Meerkats.Meerkat
 
-  def list_meerkats() do
-    Repo.all(Meerkat)
-  end
-
   def list_meerkats(opts) do
     from(m in Meerkat)
     |> filter(opts)
     |> sort(opts)
     |> Repo.all()
+  end
+
+  def list_meerkats() do
+    Repo.all(Meerkat)
   end
 
   defp filter(query, opts) do
@@ -31,7 +31,8 @@ defmodule Meow.Meerkats do
 
   defp filter_by_id(query, _opts), do: query
 
-  defp filter_by_name(query, %{name: name}) when is_binary(name) and name != "" do
+  defp filter_by_name(query, %{name: name})
+       when is_binary(name) and name != "" do
     query_string = "%#{name}%"
     where(query, [m], ilike(m.name, ^query_string))
   end
