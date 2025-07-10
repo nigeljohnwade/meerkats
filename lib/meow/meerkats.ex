@@ -8,6 +8,8 @@ defmodule Meow.Meerkats do
 
   alias Meow.Meerkats.Meerkat
 
+  def meerkat_count(), do: Repo.aggregate(Meerkat, :count)
+
   def list_meerkats(opts) do
     from(m in Meerkat)
     |> sort(opts)
@@ -15,9 +17,45 @@ defmodule Meow.Meerkats do
     |> Repo.all()
   end
 
-  def list_meerkats() do
-    Repo.all(Meerkat)
+  def list_meerkats_with_pagination(offset, limit) do
+    from(m in Meerkat)
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Repo.all()
   end
+
+  def list_meerkats_with_total_count(opts) do
+    query = from(m in Meerkat) |> filter(opts)
+
+    total_count = Repo.aggregate(query, :count)
+
+    result =
+      query
+      |> sort(opts)
+      |> paginate(opts)
+      |> Repo.all()
+
+    %{meerkats: result, total_count: total_count}
+  end
+
+  defp sort(query, %{sort_dir: sort_dir, sort_by: sort_by})
+       when sort_dir in [:asc, :desc] and
+              sort_by in [:id, :name] do
+    order_by(query, {^sort_dir, ^sort_by})
+  end
+
+  defp sort(query, _opts), do: query
+
+  defp paginate(query, %{page: page, page_size: page_size})
+       when is_integer(page) and is_integer(page_size) do
+    offset = max(page - 1, 0) * page_size
+
+    query
+    |> limit(^page_size)
+    |> offset(^offset)
+  end
+
+  defp paginate(query, _opts), do: query
 
   defp filter(query, opts) do
     query
@@ -38,15 +76,4 @@ defmodule Meow.Meerkats do
   end
 
   defp filter_by_name(query, _opts), do: query
-
-  # called when sort has options in the second argument
-  defp sort(query, %{sort_by: sort_by, sort_dir: sort_dir})
-       when sort_by in [:id, :name] and sort_dir in [:asc, :desc] do
-    order_by(query, {^sort_dir, ^sort_by})
-  end
-
-  # called when sort has no options in the second argument
-  # Q: why is _opts specified?
-  # Q: what is the significance of the underscore?
-  defp sort(query, _opts), do: query
 end
