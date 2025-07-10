@@ -10,8 +10,8 @@ defmodule Meow.Meerkats do
 
   def list_meerkats(opts) do
     from(m in Meerkat)
-    |> filter(opts)
     |> sort(opts)
+    |> filter(opts)
     |> Repo.all()
   end
 
