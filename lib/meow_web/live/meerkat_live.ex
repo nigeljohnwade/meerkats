@@ -17,7 +17,8 @@ defmodule MeowWeb.MeerkatLive do
   end
 
   def handle_info({:update, opts}, socket) do
-    path = Routes.live_path(socket, __MODULE__, opts)
+    params = merge_and_sanitize_params(socket, opts)
+    path = Routes.live_path(socket, __MODULE__, params)
     {:noreply, push_patch(socket, to: path, replace: true)}
   end
 
@@ -41,8 +42,21 @@ defmodule MeowWeb.MeerkatLive do
   end
 
   defp assign_meerkats(socket) do
-    %{sorting: sorting} = socket.assigns
-    assign(socket, :meerkats, Meerkats.list_meerkats(sorting))
+    params = merge_and_sanitize_params(socket)
+
+    assign(socket, :meerkats, Meerkats.list_meerkats(params))
+  end
+
+  defp merge_and_sanitize_params(socket, overrides \\ %{}) do
+    %{sorting: sorting, filter: filter} = socket.assigns
+
+    %{}
+    |> Map.merge(sorting)
+    |> Map.merge(filter)
+    |> Map.merge(overrides)
+    |> Map.drop([:total_count])
+    |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+    |> Map.new()
   end
 
   defp assign_filter(socket, overrides \\ %{}) do
