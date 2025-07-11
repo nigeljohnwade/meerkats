@@ -1,6 +1,7 @@
 html,
 body {
     height: 100%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .phx-click-loading {
@@ -27,6 +28,23 @@ body {
     gap: 1rem;
 }
 
+tbody tr:last-child td,
+thead tr:last-child th {
+    border-bottom: 0.125rem solid grey;
+}
+
 th {
+    font-weight: 400;
     text-align: start;
+
+    p {
+        margin: 0;
+        padding: 0.25rem;
+    }
+
+    button {
+        border: none;
+        font-size: 1rem;
+        background-color: transparent;
+    }
 }

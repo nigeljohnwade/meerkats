@@ -1,19 +1,15 @@
 <.live_component module={MeowWeb.MeerkatLive.FilterComponent} id="filter" filter={@filter} />
 <div id="table-container">
-    <table>
+    <table cellspacing="0" cellpadding="0">
         <thead>
             <tr>
                 <th>
-                    <p>
-                        <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-id"} key={:id}
-                            sorting={@sorting} display_name="ID" />
-                    </p>
+                    <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-id"} key={:id}
+                        sorting={@sorting} display_name="ID" />
                 </th>
                 <th>
-                    <p>
-                        <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-name"} key={:name}
-                            sorting={@sorting} display_name="Name" />
-                    </p>
+                    <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-name"} key={:name}
+                        sorting={@sorting} display_name="Name" />
                 </th>
             </tr>
         </thead>
