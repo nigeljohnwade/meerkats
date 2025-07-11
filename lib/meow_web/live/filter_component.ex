@@ -6,14 +6,15 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
   def render(assigns) do
     ~H"""
     <div>
+      <p>Search</p>
       <.form :let={f} for={@changeset} as={:filter} phx-submit="search" phx-target={@myself}>
-        <div>
-          <div>
+        <div class="form-row">
+          <div class="form-group">
             <%= label f, :id %>
             <%= number_input f, :id %>
             <%= error_tag f, :id %>
-            </div>
-            <div>
+          </div>
+          <div class="form-group">
             <%= label f, :name %>
             <%= text_input f, :name %>
             <%= error_tag f, :name %>

@@ -4,14 +4,16 @@
         <thead>
             <tr>
                 <th>
-                    <p>Id</p>
-                    <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-id"} key={:id}
-                        sorting={@sorting} />
+                    <p>
+                        <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-id"} key={:id}
+                            sorting={@sorting} display_name="ID" />
+                    </p>
                 </th>
                 <th>
-                    <p>Name</p>
-                    <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-name"} key={:name}
-                        sorting={@sorting} />
+                    <p>
+                        <.live_component module={MeowWeb.MeerkatLive.SortingComponent} id={"sorting-name"} key={:name}
+                            sorting={@sorting} display_name="Name" />
+                    </p>
                 </th>
             </tr>
         </thead>

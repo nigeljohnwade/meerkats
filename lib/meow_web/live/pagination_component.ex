@@ -6,27 +6,28 @@ defmodule MeowWeb.MeerkatLive.PaginationComponent do
   def render(assigns) do
     ~H"""
     <div>
-    <div>
-      <%= for {page_number, current_page?} <- pages(@pagination) do %>
-        <button
-          phx-click="show_page"
-          phx-value-page={page_number}
-          phx-target={@myself}
-          class={if current_page?, do: "active"}
-        >
-          <%= page_number %>
-        </button>
-      <% end %>
-    </div>
-    <.form
-      :let={f}
-      for={%{}}
-      as={:page_size}
-      phx-change="set_page_size"
-      phx-target={@myself}
-    >
-      <%= select f, :page_size, [10, 20, 50, 100], selected: @pagination.page_size %>
-    </.form>
+      <div>
+        <%= for {page_number, current_page?} <- pages(@pagination) do %>
+          <button
+            phx-click="show_page"
+            phx-value-page={page_number}
+            phx-target={@myself}
+            class={if current_page?, do: "active"}
+            disabled={if current_page?, do: "true"}
+          >
+            <%= page_number %>
+          </button>
+        <% end %>
+      </div>
+      <.form
+        :let={f}
+        for={%{}}
+        as={:page_size}
+        phx-change="set_page_size"
+        phx-target={@myself}
+      >
+        <%= select f, :page_size, [10, 20, 50, 100], selected: @pagination.page_size %>
+      </.form>
     </div>
     """
   end

@@ -3,9 +3,12 @@ defmodule MeowWeb.MeerkatLive.SortingComponent do
 
   def render(assigns) do
     ~H"""
-    <button phx-click="sort" phx-target={@myself}>
-      <%= @key %> <%= chevron(@sorting, @key) %>
-    </button>
+    <p>
+      <%= @display_name %> <%= chevron(@sorting, @key) %>
+      <button phx-click="sort" phx-target={@myself}>
+         <%= next_action(@sorting, @key) %>
+      </button>
+    </p>
     """
   end
 
@@ -23,4 +26,20 @@ defmodule MeowWeb.MeerkatLive.SortingComponent do
   end
 
   def chevron(_opts, _key), do: ""
+
+  def next_action(%{sort_by: sort_by, sort_dir: sort_dir}, key) do
+    cond do
+      sort_dir == :desc and sort_by == key ->
+        "sort ascending"
+
+      sort_by != key ->
+        "sort ascending"
+
+      sort_dir == :asc and sort_by == key ->
+        "sort descending"
+
+      true ->
+        ""
+    end
+  end
 end
