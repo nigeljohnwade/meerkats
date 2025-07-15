@@ -28,6 +28,12 @@ body {
     gap: 1rem;
 }
 
+table.sticky-headers thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
 tbody tr:last-child td,
 thead tr:last-child th {
     border-bottom: 0.125rem solid grey;

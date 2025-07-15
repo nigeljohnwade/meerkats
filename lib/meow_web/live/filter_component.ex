@@ -20,6 +20,7 @@ defmodule MeowWeb.MeerkatLive.FilterComponent do
             <%= error_tag f, :name %>
           </div>
           <%= submit "Search" %>
+          <button type="reset" name="reset">Reset</button>
         </div>
       </.form>
     </div>
